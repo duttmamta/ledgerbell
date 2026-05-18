@@ -1,80 +1,61 @@
 # LedgerBell 🔔
 
-**The notification layer that Xero and Sage forgot to build.**
+**Real-time financial alerts for Xero and Sage.**
 
-Know the moment an invoice is paid, a cash balance drops, a VAT deadline approaches, or a Peppol e-invoice arrives — delivered to WhatsApp, Slack, or email. No logging in to find out. No checking manually. Just a bell.
-
----
-
-## The gap
-
-Xero's Community Manager confirmed in January 2026 that payment notifications are *"not in the short term roadmap."* Users have been asking since 2012.
-
-Over 4 million businesses use Xero globally. Millions more use Sage. None of them get a WhatsApp when an invoice is paid.
-
-LedgerBell fixes that.
+When something important happens in your accounts - an invoice gets paid, a balance drops, a deadline is approaching, LedgerBell tells you instantly. WhatsApp, Slack, or email. No logging in. No checking manually.
 
 ---
 
-## What it does
+## What I'm building
 
-Connects to Xero and Sage via OAuth. Watches for financial events. Fires alerts the moment they happen.
+A lightweight notification layer that sits on top of Xero and Sage. It connects via OAuth, watches for financial events, and fires alerts the moment they happen.
 
-**Invoice paid → WhatsApp**  
-**Invoice overdue → Slack**  
-**Cash below threshold → Email**  
-**VAT deadline in 14 days → Email**  
-**Peppol e-invoice received → WhatsApp**
+- Invoice paid → instant WhatsApp
+- Invoice overdue → Slack
+- Cash balance below your threshold → email
+- VAT return due soon → email
+- Peppol e-invoice received → WhatsApp
 
-One connection. Your choice of channel. No manual checking.
+One connection. Your choice of channel.
 
 ---
 
 ## Who's building it
 
-Mamta — software engineer based in the UK, building under [XTREC Limited](https://find-and-update.company-information.service.gov.uk).
+Mamta - developer and founder, UK. Building SaaS for the accounting ecosystem. 
 
-Solo technical build. Target launch: **December 2026** via the Xero App Store and Sage Marketplace.
+Solo technical build targeting the Xero App Store and Sage Marketplace.  
+Launch: **December 2026.**
 
 ---
 
-## Current status
+## Status
 
-| Milestone | Status |
+| | |
 |---|---|
-| Concept validated (Xero community forum — 13 years of requests) | ✅ |
-| Company registered (XTREC Limited) | ✅ |
-| GitHub, Xero, Sage, Supabase accounts | ✅ |
+| Xero, Sage, Supabase accounts | ✅ |
 | Codebase scaffold | ✅ |
-| Xero OAuth + polling | 🔨 Building |
-| Sage OAuth + polling | 🔨 Building |
+| Xero OAuth + polling | 🔨 |
+| Sage OAuth + polling | 🔨 |
 | First alert end-to-end | ⬜ |
 | Beta users | ⬜ |
-| Xero App Store submission | ⬜ Sep 2026 |
+| App Store submission | ⬜ Sep 2026 |
 | Launch | ⬜ Dec 2026 |
 
 ---
 
 ## Get in touch
 
-Different people, different conversations — all welcome.
+**Accountants and bookkeepers** — if this solves a problem you have, I'd love to hear from you early.
 
-**Accountants and bookkeepers**  
-If you've been waiting for Xero or Sage to build this — I'd love to show you an early version and understand exactly what would make it useful for your practice.
+**Xero and Sage app developers** — if you've been through App Store certification or know the APIs well, happy to connect.
 
-**Xero and Sage app developers**  
-If you've navigated App Store certification or have hard-won knowledge of the Xero or Sage API in production, I'd genuinely welcome a conversation.
+**Indie hackers and solo founders** — building in the open, always up for a conversation.
 
-**Fellow indie hackers and solo founders**  
-Building in the open. Happy to compare notes, swap learnings, or just talk through the Xero ecosystem.
+**Journalists and researchers** — feel free to reach out on or off record.
 
-**Journalists and researchers**  
-LedgerBell is a solo female founder building fintech infrastructure in the UK accounting ecosystem — a market with a documented, multi-year gap and no dedicated solution. Happy to talk on or off record.
+→ Open an issue or start a discussion.
 
 ---
 
-**→ Open an issue, start a discussion, or email via GitHub.**
-
----
-
-*Built by [@duttmamta](https://github.com/duttmamta) · Trading as LedgerBell · XTREC Limited · UK*
+*[@duttmamta](https://github.com/duttmamta) · LedgerBell · XTREC Limited · UK*
