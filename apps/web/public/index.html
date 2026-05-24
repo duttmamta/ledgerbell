@@ -423,6 +423,7 @@
           class="email-input"
           type="email"
           id="email-input"
+          name="email"
           placeholder="your@email.com"
           required
           autocomplete="email"
@@ -440,7 +441,7 @@
   <div class="footer">
     <a href="https://github.com/duttmamta/ledgerbell" target="_blank" rel="noopener">GitHub</a>
     <div class="footer-sep"></div>
-    <a href="mailto:hello@ledgerbell.co.uk">hello@ledgerbell.co.uk</a>
+    <a href="mailto:admin@xtrec.co.uk">admin@xtrec.co.uk</a>
     <div class="footer-sep"></div>
     <a href="#">XTREC Limited · UK</a>
   </div>
@@ -448,27 +449,34 @@
 </div>
 
 <script>
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const email = document.getElementById('email-input').value;
     const form = document.getElementById('waitlist-form');
     const success = document.getElementById('success-msg');
+    const btn = form.querySelector('button');
 
-    // Replace this fetch with your actual Resend / Mailchimp endpoint
-    // fetch('/api/waitlist', { method:'POST', body: JSON.stringify({ email }) })
+    btn.textContent = 'Joining...';
+    btn.disabled = true;
 
-    // For now — show success immediately
-    // Wire up to Resend or Mailchimp when ready
-    form.style.display = 'none';
-    success.style.display = 'block';
+    try {
+      const res = await fetch('https://formspree.io/f/xwvzvbdj', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email })
+      });
 
-    // Optional: send to a free form service like Formspree
-    // Replace YOUR_FORM_ID with your Formspree form ID
-    // fetch('https://formspree.io/f/YOUR_FORM_ID', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email })
-    // })
+      if (res.ok) {
+        form.style.display = 'none';
+        success.style.display = 'block';
+      } else {
+        btn.textContent = 'Try again';
+        btn.disabled = false;
+      }
+    } catch (err) {
+      btn.textContent = 'Try again';
+      btn.disabled = false;
+    }
   }
 </script>
 
