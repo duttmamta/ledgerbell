@@ -54,7 +54,7 @@ Launch: **December 2026.**
 
 **Journalists and researchers** — feel free to reach out on or off record.
 
-→ Open an issue or start a discussion.
+→ [Open an issue](https://github.com/duttmamta/ledgerbell/issues/new) · [Join the discussion](https://github.com/duttmamta/ledgerbell/discussions) · admin@xtrec.co.uk
 
 ---
 
