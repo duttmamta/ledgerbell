@@ -7,7 +7,8 @@ export async function GET() {
     response_type: 'code',
     client_id: process.env.XERO_CLIENT_ID!,
     redirect_uri: process.env.XERO_REDIRECT_URI!,
-    scope: 'openid profile email accounting.transactions.read accounting.contacts.read accounting.settings.read offline_access',
+    scope: 'openid profile email offline_access accounting.invoices.read accounting.banktransactions.read accounting.settings.read accounting.contacts.read',
+
     state: crypto.randomUUID(),
   })
 

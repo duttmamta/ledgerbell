@@ -1,0 +1,77 @@
+commit 5116f2644a78d07bea0a5544e72402577cad5777
+Author: xtrec <admin@xtrec.co.uk>
+Date:   Wed May 27 19:09:01 2026 +0100
+
+    fix: correct Xero OAuth scope format
+
+diff --git a/apps/web/app/page.tsx b/apps/web/app/page.tsx
+index 7f28e5f..0925aaa 100644
+--- a/apps/web/app/page.tsx
++++ b/apps/web/app/page.tsx
+@@ -1,5 +1,7 @@
+-import { redirect } from 'next/navigation'
+-
+ export default function Home() {
+-  redirect('/coming-soon.html')
++  return (
++    <main style={{margin:0,padding:0}}>
++      <p>LedgerBell — launching December 2026</p>
++    </main>
++  )
+ }
+diff --git a/apps/web/next-env.d.ts b/apps/web/next-env.d.ts
+new file mode 100644
+index 0000000..1b3be08
+--- /dev/null
++++ b/apps/web/next-env.d.ts
+@@ -0,0 +1,5 @@
++/// <reference types="next" />
++/// <reference types="next/image-types/global" />
++
++// NOTE: This file should not be edited
++// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+diff --git a/apps/web/tsconfig.json b/apps/web/tsconfig.json
+index a9c54b2..786f911 100644
+--- a/apps/web/tsconfig.json
++++ b/apps/web/tsconfig.json
+@@ -1,7 +1,11 @@
+ {
+   "compilerOptions": {
+     "target": "ES2017",
+-    "lib": ["dom", "dom.iterable", "esnext"],
++    "lib": [
++      "dom",
++      "dom.iterable",
++      "esnext"
++    ],
+     "allowJs": true,
+     "skipLibCheck": true,
+     "strict": true,
+@@ -13,8 +17,24 @@
+     "isolatedModules": true,
+     "jsx": "preserve",
+     "incremental": true,
+-    "paths": { "@/*": ["./*"] }
++    "paths": {
++      "@/*": [
++        "./*"
++      ]
++    },
++    "plugins": [
++      {
++        "name": "next"
++      }
++    ]
+   },
+-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+-  "exclude": ["node_modules"]
++  "include": [
++    "**/*.ts",
++    "**/*.tsx",
++    "next-env.d.ts",
++    ".next/types/**/*.ts"
++  ],
++  "exclude": [
++    "node_modules"
++  ]
+ }
