@@ -1,13 +1,5 @@
-import { readFileSync } from 'fs'
-import { join } from 'path'
+import { redirect } from 'next/navigation'
 
 export default function Home() {
-  return (
-    <div dangerouslySetInnerHTML={{
-      __html: readFileSync(
-        join(process.cwd(), 'public/coming-soon.html'), 
-        'utf8'
-      )
-    }} />
-  )
+  redirect('/coming-soon.html')
 }
