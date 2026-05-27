@@ -1,5 +1,7 @@
-import { redirect } from 'next/navigation'
-
 export default function Home() {
-  redirect('/coming-soon.html')
+  return (
+    <main style={{margin:0,padding:0}}>
+      <p>LedgerBell — launching December 2026</p>
+    </main>
+  )
 }
