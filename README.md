@@ -35,10 +35,13 @@ Launch: **December 2026.**
 |---|---|
 | Xero, Sage, Supabase accounts | ✅ |
 | Codebase scaffold | ✅ |
-| Xero OAuth + polling | 🔨 |
-| Sage OAuth + polling | 🔨 |
-| First alert end-to-end | ⬜ |
-| Beta users | ⬜ |
+| ledgerbell.co.uk live | ✅ |
+| Xero OAuth connect route | ✅ |
+| Xero authorisation flow working | ✅ |
+| Xero callback — token exchange | ✅ |
+| Token storage in Supabase | ⬜ |
+| First invoice alert firing | ⬜ |
+| Sage OAuth | ⬜ |
 | App Store submission | ⬜ Sep 2026 |
 | Launch | ⬜ Dec 2026 |
 
