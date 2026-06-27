@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
+import { encrypt } from '@/lib/encrypt'
 
 export const dynamic = 'force-dynamic'
+
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -8,10 +15,10 @@ export async function GET(request: NextRequest) {
   const error = searchParams.get('error')
 
   if (error || !code) {
-    console.error('Xero OAuth error:', error)
     return NextResponse.redirect(new URL('/?error=xero_denied', request.url))
   }
 
+  // Exchange code for tokens
   const tokenRes = await fetch('https://identity.xero.com/connect/token', {
     method: 'POST',
     headers: {
@@ -34,11 +41,31 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/?error=xero_token', request.url))
   }
 
-  console.log('Xero tokens received:', {
-    expires_in: tokens.expires_in,
-    has_refresh: !!tokens.refresh_token,
-    token_preview: tokens.access_token?.slice(0, 20) + '...',
+  // Get Xero tenant (org) info
+  const connectionsRes = await fetch('https://api.xero.com/connections', {
+    headers: { Authorization: `Bearer ${tokens.access_token}` },
   })
+  const connections = await connectionsRes.json()
+  const tenant = connections[0]
+
+  // Create or find user (using tenant email as placeholder for now)
+  const { data: user } = await supabase
+    .from('users')
+    .upsert({ email: `xero-${tenant.tenantId}@ledgerbell.co.uk` })
+    .select()
+    .single()
+
+  // Store encrypted tokens
+  await supabase.from('xero_connections').upsert({
+    user_id: user.id,
+    tenant_id: tenant.tenantId,
+    tenant_name: tenant.tenantName,
+    access_token: encrypt(tokens.access_token),
+    refresh_token: encrypt(tokens.refresh_token),
+    token_expires_at: new Date(Date.now() + tokens.expires_in * 1000).toISOString(),
+  })
+
+  console.log('✅ Xero tokens stored for:', tenant.tenantName)
 
   return NextResponse.redirect(new URL('/?connected=xero', request.url))
 }
