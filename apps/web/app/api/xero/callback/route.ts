@@ -18,7 +18,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/?error=xero_denied', request.url))
   }
 
-  // Exchange code for tokens
   const tokenRes = await fetch('https://identity.xero.com/connect/token', {
     method: 'POST',
     headers: {
@@ -41,35 +40,24 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/?error=xero_token', request.url))
   }
 
-  // Get Xero tenant info
   const connectionsRes = await fetch('https://api.xero.com/connections', {
     headers: { Authorization: `Bearer ${tokens.access_token}` },
   })
   const connections = await connectionsRes.json()
   const tenant = connections[0]
-
   const email = `xero-${tenant.tenantId}@ledgerbell.co.uk`
 
-  // Insert user — ignore conflict if already exists
-  const { error: userError } = await supabase
+  const { data: user, error: upsertError } = await supabase
     .from('users')
-    .insert({ email })
-    .select()
-    .single()
-
-  // Fetch the user whether just created or already existed
-  const { data: user, error: fetchError } = await supabase
-    .from('users')
+    .upsert({ email }, { onConflict: 'email' })
     .select('id')
-    .eq('email', email)
     .single()
 
-  if (fetchError || !user) {
-    console.error('User fetch failed:', fetchError)
-    return NextResponse.redirect(new URL('/?error=user_fetch', request.url))
+  if (upsertError || !user) {
+    console.error('User upsert failed:', upsertError)
+    return NextResponse.redirect(new URL('/?error=user_upsert', request.url))
   }
 
-  // Store encrypted tokens
   const { error: connError } = await supabase
     .from('xero_connections')
     .upsert({
