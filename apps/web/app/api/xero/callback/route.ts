@@ -41,31 +41,53 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/?error=xero_token', request.url))
   }
 
-  // Get Xero tenant (org) info
+  // Get Xero tenant info
   const connectionsRes = await fetch('https://api.xero.com/connections', {
     headers: { Authorization: `Bearer ${tokens.access_token}` },
   })
   const connections = await connectionsRes.json()
   const tenant = connections[0]
 
-  // Create or find user (using tenant email as placeholder for now)
-  const { data: user } = await supabase
+  const email = `xero-${tenant.tenantId}@ledgerbell.co.uk`
+
+  // Insert user — ignore conflict if already exists
+  const { error: userError } = await supabase
     .from('users')
-    .upsert({ email: `xero-${tenant.tenantId}@ledgerbell.co.uk` })
+    .insert({ email })
     .select()
     .single()
 
+  // Fetch the user whether just created or already existed
+  const { data: user, error: fetchError } = await supabase
+    .from('users')
+    .select('id')
+    .eq('email', email)
+    .single()
+
+  if (fetchError || !user) {
+    console.error('User fetch failed:', fetchError)
+    return NextResponse.redirect(new URL('/?error=user_fetch', request.url))
+  }
+
   // Store encrypted tokens
-  await supabase.from('xero_connections').upsert({
-    user_id: user.id,
-    tenant_id: tenant.tenantId,
-    tenant_name: tenant.tenantName,
-    access_token: encrypt(tokens.access_token),
-    refresh_token: encrypt(tokens.refresh_token),
-    token_expires_at: new Date(Date.now() + tokens.expires_in * 1000).toISOString(),
-  })
+  const { error: connError } = await supabase
+    .from('xero_connections')
+    .upsert({
+      user_id: user.id,
+      tenant_id: tenant.tenantId,
+      tenant_name: tenant.tenantName,
+      access_token: encrypt(tokens.access_token),
+      refresh_token: encrypt(tokens.refresh_token),
+      token_expires_at: new Date(
+        Date.now() + tokens.expires_in * 1000
+      ).toISOString(),
+    }, { onConflict: 'tenant_id' })
+
+  if (connError) {
+    console.error('Connection store failed:', connError)
+    return NextResponse.redirect(new URL('/?error=conn_store', request.url))
+  }
 
   console.log('✅ Xero tokens stored for:', tenant.tenantName)
-
   return NextResponse.redirect(new URL('/?connected=xero', request.url))
 }
